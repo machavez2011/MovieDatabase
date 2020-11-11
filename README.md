@@ -1,0 +1,1 @@
+This will be a movie database that will utilize the IMDb API. It will be written in Vanilla JavaScript.
