@@ -1,4 +1,4 @@
-let moviesDatabase = (function() {
+let moviesDatabase = (function(config) {
     function render() {
         const main = document.querySelector('#main');
         const header = '<h1>Movie Database</h1>';
@@ -14,7 +14,7 @@ let moviesDatabase = (function() {
         fetch("https://imdb8.p.rapidapi.com/title/auto-complete?q=" + movieQuery.value, {
             "method": "GET",
             "headers": {
-                "x-rapidapi-key": "7f66dbc693msh6d45b0305e5f07ap14b428jsn8eeed1d35807",
+                "x-rapidapi-key": config.rapidapi,
                 "x-rapidapi-host": "imdb8.p.rapidapi.com"
             }
         })
@@ -45,6 +45,6 @@ let moviesDatabase = (function() {
         render,
         getMovies
     }
-})()
+})(config)
 
 moviesDatabase.render();
