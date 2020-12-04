@@ -15,6 +15,8 @@ function getMovies() {
 }
 
 function populateList(data) {
+    const queryResult = document.querySelector('#queryResult');
+    queryResult.innerHTML = movieQuery.value;
     const resultList = document.querySelector('#resultList');
     resultList.innerHTML = '';
     movieQuery.value = '';
@@ -22,21 +24,26 @@ function populateList(data) {
     data.d = data.d.filter(movie => movie.i);
 
     data.d.forEach(movie => {
-        // let newLi = document.createElement('li');
-        // let newImg = document.createElement('img');
-        // newLi.innerHTML = movie.l;
-        // newImg.setAttribute('src', movie.i.imageUrl);
-        // resultList.appendChild(newLi);
-        // resultList.appendChild(newImg);
         result += 
         `
-        <li>
-            <img src=${movie.i.imageUrl}>
-            <p>${movie.l}</p>
-        </li>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100">
+                <a href="#"><img class="card-img-top" src=${movie.i.imageUrl} alt=""></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="#">${movie.l}</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
         `;
     });
     resultList.innerHTML = result;
 }
 
 document.querySelector('#searchButton').addEventListener('click', getMovies)
+document.querySelector('#movieQuery').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        getMovies();
+    }
+});
