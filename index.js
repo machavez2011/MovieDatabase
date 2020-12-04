@@ -1,50 +1,42 @@
-let moviesDatabase = (function(config) {
-    function render() {
-        const main = document.querySelector('#main');
-        const header = '<h1>Movie Database</h1>';
-        const input = "<input id='movieQuery' type='text' placeholder='Enter Movie here'>";
-        const search = "<button id='searchButton'>Search</button>";
-        const result = "<ul id='resultList'></ul>";
-        main.innerHTML = header + input + search + result;
-        document.querySelector('#searchButton').addEventListener('click', moviesDatabase.getMovies);
-    }
-
-    function getMovies() {
-        const movieQuery = document.querySelector('#movieQuery');
-        fetch("https://imdb8.p.rapidapi.com/title/auto-complete?q=" + movieQuery.value, {
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-key": config.rapidapi,
-                "x-rapidapi-host": "imdb8.p.rapidapi.com"
-            }
-        })
-        .then(response => response.json())
-        .then(data => populateList(data))
-        .catch(err => {
-            console.error(err);
-        });
-    }
-
-    function populateList(data) {
-        const resultList = document.querySelector('#resultList');
-        while(resultList.firstChild) {
-            resultList.removeChild(resultList.firstChild)
+function getMovies() {
+    const movieQuery = document.querySelector('#movieQuery');
+    fetch("https://imdb8.p.rapidapi.com/title/auto-complete?q=" + movieQuery.value, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-key": config.rapidapi,
+            "x-rapidapi-host": "imdb8.p.rapidapi.com"
         }
+    })
+    .then(response => response.json())
+    .then(data => populateList(data))
+    .catch(err => {
+        console.log(err);
+    });
+}
 
-        data.d.forEach(movie => {
-            newLi = document.createElement('li');
-            newLi.innerHTML = movie.l;
+function populateList(data) {
+    const resultList = document.querySelector('#resultList');
+    resultList.innerHTML = '';
+    movieQuery.value = '';
+    let result = '';
+    data.d = data.d.filter(movie => movie.i);
 
-            resultList.appendChild(newLi);
-        });
+    data.d.forEach(movie => {
+        // let newLi = document.createElement('li');
+        // let newImg = document.createElement('img');
+        // newLi.innerHTML = movie.l;
+        // newImg.setAttribute('src', movie.i.imageUrl);
+        // resultList.appendChild(newLi);
+        // resultList.appendChild(newImg);
+        result += 
+        `
+        <li>
+            <img src=${movie.i.imageUrl}>
+            <p>${movie.l}</p>
+        </li>
+        `;
+    });
+    resultList.innerHTML = result;
+}
 
-        movieQuery.value = '';
-    }
-
-    return {
-        render,
-        getMovies
-    }
-})(config)
-
-moviesDatabase.render();
+document.querySelector('#searchButton').addEventListener('click', getMovies)
